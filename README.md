@@ -1,7 +1,7 @@
 # Athena
 The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discord Bot.
 
-# Running the Bot
+## Running the Bot
 
 - Pre-requisites:
 
