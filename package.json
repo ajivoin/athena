@@ -1,0 +1,15 @@
+{
+  "name": "athena",
+  "version": "0.0.0",
+  "description": "Athena, the Greek Goddess of Knowledge. Ask her for definitions.",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Jivoin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.io": "github:woor/discord.io#gateway_v6",
+    "word-definition": "^2.1.6"
+  }
+}
