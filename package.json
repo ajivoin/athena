@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
+    "oxford-dictionary": "^1.4.1",
     "word-definition": "^2.1.6"
   }
 }

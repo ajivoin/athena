@@ -1,8 +1,4 @@
 {
   "trigger": "!define",
-  "lang": "en",
-  "wd_options": {
-    "exact": false,
-    "hyperlinks": "none"
-  }
+  "lang": "en"
 }
