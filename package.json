@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "description": "Athena, the Greek Goddess of Knowledge. Ask her for definitions.",
   "main": "bot.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "author": "Andrew Jivoin",
   "license": "ISC",
   "dependencies": {
