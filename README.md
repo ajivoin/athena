@@ -8,14 +8,17 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
   - [Node.js](https://nodejs.org/en/)
   - [Discord Developer Application and Bot Account](https://discordapp.com/developers/applications/)
     - You must add the bot account to a server to use it.
+  - [Oxford Dictionaries API Account](https://developer.oxforddictionaries.com/)
 
 - Clone this repository.
 
-- In the root directory create `auth.json` with the following format, replacing `DISCORD_BOT_TOKEN_HERE` with your Bot's token:
+- In the root directory create `auth.json` with the following format, replacing placeholders with corresponding tokens:
 
   ```js
   {
-    "token": "DISCORD_BOT_TOKEN_HERE"
+    "discordBotToken": "DISCORD_BOT_TOKEN_HERE",
+    "oxfordAppID": "OXFORD_APP_ID_HERE",
+    "oxfordAppKey": "OXFORD_APP_KEY_HERE"
   }
   ```
 
