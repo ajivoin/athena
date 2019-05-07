@@ -3,7 +3,14 @@ const Dictionary = require('oxford-dictionary');
 const fs = require('fs');
 const http = require('http');
 const config = require('./config.json');
-const auth = require('./auth.json');
+require('dotenv').config();
+
+const auth = {
+  discordBotToken: process.env.discordBotToken.toString(),
+  oxfordAppID: process.env.oxfordAppID.toString(),
+  oxfordAppKey: process.env.oxfordAppKey.toString(),
+}
+
 
 const bot = new Discord.Client({
   token: auth.discordBotToken,
