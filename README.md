@@ -21,15 +21,22 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
 
 - Clone this repository.
 
-- In the root directory create `auth.json` with the following format, replacing placeholders with corresponding tokens:
+- In the root directory create `.env` with the following format, replacing placeholders with corresponding tokens:
 
-  ```js
-  {
-    "discordBotToken": "DISCORD_BOT_TOKEN_HERE",
-    "oxfordAppID": "OXFORD_APP_ID_HERE",
-    "oxfordAppKey": "OXFORD_APP_KEY_HERE"
-  }
+  ```
+  discordBotToken=DISCORD_BOT_TOKEN_HERE
+  oxfordAppID=OXFORD_APP_ID_HERE
+  oxfordAppKey=OXFORD_APP_KEY_HERE
   ```
 
 
-- Run `npm install` then `node bot.js`. Your bot should be online on all servers you added it to.
+- Run `npm install` then `npm start`. Congratulations, your bot is online!
+
+## Contributing
+
+If you want to develop a feature or bug fix, please [create a pull request](https://github.com/ajivoin/athena/compare). Before creating a pull request, please read the following:
+
+- Verify that your new code actually works.
+- Make sure you didn't break existing code.
+- Ensure your code is linted. This project has two commands you can run for linting: `npm run lint` and `npm run lint:fix`. `lint` will report errors, and `lint:fix` will automatically correct some errors.
+- Please describe your changes in your pull request.
