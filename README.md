@@ -1,7 +1,15 @@
 # Athena
 The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discord Bot.
 
-## Running the Bot
+## Usage
+
+- Define a word with `!define <word>`
+  - Sends a message containing the word, part of speech, and definition.
+- Play pronunciation of a word with `!pronounce <word>`
+  - Joins the voice channel the user who sent this message is in and plays the word's pronunciation.
+  - Alias: `!say <word>`
+
+## Hosting the Bot
 
 - Pre-requisites:
 

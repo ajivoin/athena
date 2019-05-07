@@ -3,7 +3,10 @@ const Dictionary = require('oxford-dictionary');
 const fs = require('fs');
 const http = require('http');
 const config = require('./config.json');
-require('dotenv').config();
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const auth = {
   discordBotToken: process.env.discordBotToken.toString(),
