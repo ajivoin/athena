@@ -55,7 +55,7 @@ bot.on('message', (user, userID, channelID, message) => {
           });
         },
         (err) => {
-          console.log(err);
+          console.error(err);
           bot.sendMessage({
             to: channelID,
             message: `There was a problem finding a definition for ${message.substr(trigger.length + 1)}.`,
@@ -81,17 +81,12 @@ bot.on('message', (user, userID, channelID, message) => {
                 const download = fs.createWriteStream('temp.mp3');
 
                 stream.on('fileEnd', () => {
-                  console.log('goodbye');
                   stream.stop();
                   bot.leaveVoiceChannel(channel);
                 });
 
                 download.on('finish', () => {
-                  console.log('downloaded!');
-
                   stream.playAudioFile('temp.mp3');
-                  // stream.stop();
-                  // bot.leaveVoiceChannel(channel);
                 });
 
                 http.get(pronunciationURL, (resDownload) => {
@@ -101,7 +96,7 @@ bot.on('message', (user, userID, channelID, message) => {
             });
           },
           (err) => {
-            console.log(err);
+            console.error(err);
             bot.sendMessage({
               to: channelID,
               message: `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`,
