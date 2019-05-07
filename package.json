@@ -1,11 +1,25 @@
 {
   "name": "athena",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Athena, the Greek Goddess of Knowledge. Ask her for definitions.",
   "main": "bot.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node bot.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajivoin/athena.git"
+  },
   "author": "Andrew Jivoin",
   "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
     "oxford-dictionary": "^1.4.1"
