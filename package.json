@@ -16,13 +16,13 @@
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "^10.0.1",
-    "dotenv": "^8.0.0",
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0"
   },
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
+    "dotenv": "^8.0.0",
     "oxford-dictionary": "^1.4.1"
   }
 }

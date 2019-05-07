@@ -2,17 +2,18 @@ const Discord = require('discord.io');
 const Dictionary = require('oxford-dictionary');
 const fs = require('fs');
 const http = require('http');
+const dotenv = require('dotenv');
 const config = require('./config.json');
 
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  dotenv.config();
 }
 
 const auth = {
   discordBotToken: process.env.discordBotToken.toString(),
   oxfordAppID: process.env.oxfordAppID.toString(),
   oxfordAppKey: process.env.oxfordAppKey.toString(),
-}
+};
 
 
 const bot = new Discord.Client({
