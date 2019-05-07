@@ -8,7 +8,8 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
   - [Node.js](https://nodejs.org/en/)
   - [Discord Developer Application and Bot Account](https://discordapp.com/developers/applications/)
     - You must add the bot account to a server to use it.
-  - [Oxford Dictionaries API Account](https://developer.oxforddictionaries.com/)
+  - [Oxford Dictionaries API Account](https://developer.oxforddictionaries.com/) for accessing the dictionary API
+  - [ffmpeg](https://ffmpeg.org/) for playing word pronunciations
 
 - Clone this repository.
 
