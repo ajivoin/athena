@@ -24,7 +24,29 @@ const dict = new Dictionary({
   source_lang: 'en'
 });
 
-const responseToWordObject = (res) => {
+const flagToLexicalCategory = {
+  '-n': 'noun',
+  '-v': 'verb',
+  '-adj': 'adjective',
+  '-adv': 'adverb'
+};
+
+const responseToWordObject = (res, queryFlag) => {
+  if (queryFlag) {
+    for (let i = 0; i < res.results.length; i++) {
+      for (let j = 0; j < res.results[i].lexicalEntries.length; j++) {
+        const lexicalEntry = res.results[i].lexicalEntries[j];
+        if (lexicalEntry.lexicalCategory.toLowerCase() === flagToLexicalCategory[queryFlag]) {
+          return {
+            category: lexicalEntry.lexicalCategory,
+            definition: lexicalEntry.entries[0].senses[0].definitions[0],
+            word: res.results[0].word
+          };
+        }
+      }
+    }
+    return null;
+  }
   const lexicalEntry = _.get(res, 'results[0].lexicalEntries[0]', false);
   return lexicalEntry ? {
     category: lexicalEntry.lexicalCategory,
@@ -45,13 +67,18 @@ client.on('message', async (message) => {
   const trigger = messageContent.substring(0, splitIndex);
   switch (trigger) {
     case '!define': {
+      const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
+        ? messageContent.split(' ')[1] : null;
+
       const lookup = dict.definitions({
         fields: 'definitions',
-        word: encodeURI(messageContent.substr(splitIndex + 1))
+        word: encodeURI(
+          queryFlag ? messageContent.substr(splitIndex + queryFlag.length + 2) : messageContent.substr(splitIndex + 1)
+        )
       });
       lookup.then(
         (res) => {
-          const entry = responseToWordObject(res);
+          const entry = responseToWordObject(res, queryFlag);
           if (entry) {
             message.reply(`${entry.word} (${entry.category}): ${entry.definition}`);
           }
