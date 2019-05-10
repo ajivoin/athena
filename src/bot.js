@@ -35,17 +35,6 @@ const responseToWordObject = (res) => {
 
 const responseToPronunciationURL = res => _.get(res, 'results[0].lexicalEntries[0].pronunciations[0].audioFile', null);
 
-/* eslint-disable */
-const findChannel = (userID) => {
-  for (const chan in client.channels) {
-    if (client.channels[chan].type === 2 && userID in client.channels[chan].members) {
-      return chan;
-    }
-  }
-  return null;
-};
-/* eslint-enable */
-
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
