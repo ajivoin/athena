@@ -1,12 +1,12 @@
 {
   "name": "athena",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Athena, the Greek Goddess of Knowledge. Ask her for definitions.",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "start": "node src/bot.js",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "repository": {
     "type": "git",

@@ -1,10 +1,9 @@
-const Discord = require('discord.io');
+const _ = require('lodash');
 const Dictionary = require('oxford-dictionary');
+const Discord = require('discord.io');
+const dotenv = require('dotenv');
 const fs = require('fs');
 const http = require('http');
-const dotenv = require('dotenv');
-const _ = require('lodash');
-const config = require('./config.json');
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
@@ -18,14 +17,14 @@ const auth = {
 
 
 const bot = new Discord.Client({
-  token: auth.discordBotToken,
   autorun: true,
+  token: auth.discordBotToken,
 });
 
 const dict = new Dictionary({
   app_id: auth.oxfordAppID,
   app_key: auth.oxfordAppKey,
-  source_lang: config.lang,
+  source_lang: 'en',
 });
 
 const responseToWordObject = (res) => {
@@ -59,22 +58,25 @@ bot.on('message', (user, userID, channelID, message) => {
   const trigger = message.substring(0, splitIndex);
   switch (trigger) {
     case '!define': {
-      const lookup = dict.definitions(encodeURI(message.substr(splitIndex + 1)));
+      const lookup = dict.definitions({
+        fields: 'definitions',
+        word: encodeURI(message.substr(splitIndex + 1)),
+      });
       lookup.then(
         (res) => {
           const entry = responseToWordObject(res);
           if (entry) {
             bot.sendMessage({
-              to: channelID,
               message: `${entry.word} (${entry.category}): ${entry.definition}`,
+              to: channelID,
             });
           }
         },
         (err) => {
           console.error(err);
           bot.sendMessage({
-            to: channelID,
             message: `There was a problem finding a definition for ${message.substr(trigger.length + 1)}.`,
+            to: channelID,
           });
         },
       );
@@ -93,8 +95,8 @@ bot.on('message', (user, userID, channelID, message) => {
               const msg = `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`;
               console.error(msg);
               bot.sendMessage({
-                to: channelID,
                 message: msg,
+                to: channelID,
               });
               return;
             }
@@ -126,8 +128,8 @@ bot.on('message', (user, userID, channelID, message) => {
             const msg = `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`;
             console.error(pronunciationError, msg);
             bot.sendMessage({
-              to: channelID,
               message: msg,
+              to: channelID,
             });
           },
         );
