@@ -1,6 +1,6 @@
 {
   "name": "athena",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Athena, the Greek Goddess of Knowledge. Ask her for definitions.",
   "main": "bot.js",
   "scripts": {
