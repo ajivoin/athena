@@ -23,6 +23,7 @@
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
     "dotenv": "^8.0.0",
+    "lodash": "^4.17.11",
     "oxford-dictionary": "^1.4.1"
   }
 }
