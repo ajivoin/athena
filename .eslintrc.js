@@ -7,5 +7,6 @@ module.exports = {
     'no-console': 'off',
     'consistent-return': 'off',
     'max-len': ['warn', 120],
+    'comma-dangle': ['error', 'never']
   },
 };
