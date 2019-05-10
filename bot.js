@@ -3,6 +3,7 @@ const Dictionary = require('oxford-dictionary');
 const fs = require('fs');
 const http = require('http');
 const dotenv = require('dotenv');
+const _ = require('lodash');
 const config = require('./config.json');
 
 if (process.env.NODE_ENV !== 'production') {
@@ -28,13 +29,15 @@ const dict = new Dictionary({
 });
 
 const responseToWordObject = (res) => {
-  const lexicalEntry = res.results[0].lexicalEntries[0];
-  return {
+  const lexicalEntry = _.get(res, 'results[0].lexicalEntries[0]', false);
+  return lexicalEntry ? {
     category: lexicalEntry.lexicalCategory,
     definition: lexicalEntry.entries[0].senses[0].definitions[0],
     word: res.results[0].word,
-  };
+  } : null;
 };
+
+const responseToPronunciationURL = res => _.get(res, 'results[0].lexicalEntries[0].pronunciations[0].audioFile', null);
 
 /* eslint-disable */
 const findChannel = (userID) => {
@@ -60,10 +63,12 @@ bot.on('message', (user, userID, channelID, message) => {
       lookup.then(
         (res) => {
           const entry = responseToWordObject(res);
-          bot.sendMessage({
-            to: channelID,
-            message: `${entry.word} (${entry.category}): ${entry.definition}`,
-          });
+          if (entry) {
+            bot.sendMessage({
+              to: channelID,
+              message: `${entry.word} (${entry.category}): ${entry.definition}`,
+            });
+          }
         },
         (err) => {
           console.error(err);
@@ -82,14 +87,25 @@ bot.on('message', (user, userID, channelID, message) => {
         const lookup = dict.pronunciations(encodeURI(message.substr(splitIndex + 1)));
         lookup.then(
           (res) => {
+            const pronunciationURL = responseToPronunciationURL(res);
+
+            if (!pronunciationURL) {
+              const msg = `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`;
+              console.error(msg);
+              bot.sendMessage({
+                to: channelID,
+                message: msg,
+              });
+              return;
+            }
+
+            const download = fs.createWriteStream('temp.mp3');
+
             bot.joinVoiceChannel(channel, (joinError) => {
               if (joinError) return console.error(joinError);
 
               bot.getAudioContext(channel, (audioError, stream) => {
                 if (audioError) return console.error(audioError);
-
-                const pronunciationURL = res.results[0].lexicalEntries[0].pronunciations[0].audioFile;
-                const download = fs.createWriteStream('temp.mp3');
 
                 stream.on('fileEnd', () => {
                   stream.stop();
@@ -106,11 +122,12 @@ bot.on('message', (user, userID, channelID, message) => {
               });
             });
           },
-          (err) => {
-            console.error(err);
+          (pronunciationError) => {
+            const msg = `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`;
+            console.error(pronunciationError, msg);
             bot.sendMessage({
               to: channelID,
-              message: `There was a problem finding pronunciation for ${message.substr(trigger.length + 1)}.`,
+              message: msg,
             });
           },
         );
