@@ -114,7 +114,7 @@ client.on('message', async (message) => {
             const download = fs.createWriteStream('temp.mp3');
             download.on('finish', () => {
               message.member.voiceChannel.join().then((connection) => {
-                const dispatcher = connection.playFile('./temp.mp3', { end: false });
+                const dispatcher = connection.playFile('./temp.mp3', { passes: 3 });
 
                 dispatcher.on('end', () => {
                   dispatcher.destroy();
