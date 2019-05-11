@@ -67,20 +67,25 @@ client.on('message', async (message) => {
   const trigger = messageContent.substring(0, splitIndex);
   switch (trigger) {
     case '!define': {
+      message.channel.startTyping();
       const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
         ? messageContent.split(' ')[1] : null;
 
+      const offset = queryFlag ? splitIndex + queryFlag.length + 2 : splitIndex + 1;
+
       const lookup = dict.definitions({
         fields: 'definitions',
-        word: encodeURI(
-          queryFlag ? messageContent.substr(splitIndex + queryFlag.length + 2) : messageContent.substr(splitIndex + 1)
-        )
+        word: encodeURI(messageContent.substr(offset))
       });
       lookup.then(
         (res) => {
           const entry = responseToWordObject(res, queryFlag);
           if (entry) {
             message.reply(`${entry.word} (${entry.category}): ${entry.definition}`);
+          } else {
+            message.reply(
+              `There was a problem finding a definition for ${messageContent.substr(offset)} (${queryFlag ? flagToLexicalCategory[queryFlag] : ''}).`
+            );
           }
         },
         (err) => {
@@ -88,6 +93,7 @@ client.on('message', async (message) => {
           message.reply(`There was a problem finding a definition for ${messageContent.substr(trigger.length + 1)}.`);
         },
       );
+      message.channel.stopTyping();
       break;
     }
     case '!say':
@@ -108,7 +114,7 @@ client.on('message', async (message) => {
             const download = fs.createWriteStream('temp.mp3');
             download.on('finish', () => {
               message.member.voiceChannel.join().then((connection) => {
-                const dispatcher = connection.playFile('./temp.mp3');
+                const dispatcher = connection.playFile('./temp.mp3', { end: false });
 
                 dispatcher.on('end', () => {
                   dispatcher.destroy();
