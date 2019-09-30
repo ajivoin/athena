@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Dictionary = require('oxford-dictionary');
+const Dictionary = require('../../oxford-dictionary');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
@@ -21,7 +21,7 @@ const client = new Discord.Client();
 const dict = new Dictionary({
   app_id: auth.oxfordAppID,
   app_key: auth.oxfordAppKey,
-  source_lang: 'en'
+  source_lang: 'en-us'
 });
 
 const flagToLexicalCategory = {
@@ -47,6 +47,7 @@ const responseToWordObject = (res, queryFlag) => {
     }
     return null;
   }
+
   const lexicalEntry = _.get(res, 'results[0].lexicalEntries[0]', false);
   return lexicalEntry ? {
     category: lexicalEntry.lexicalCategory,
@@ -55,7 +56,10 @@ const responseToWordObject = (res, queryFlag) => {
   } : null;
 };
 
-const responseToPronunciationURL = res => _.get(res, 'results[0].lexicalEntries[0].pronunciations[0].audioFile', null);
+const responseToPronunciationURL = (res) => {
+  console.log(_.find(res, 'audioFile'));
+  return _.find(res, 'results[0].lexicalEntries[0].pronunciations[0].audioFile', null);
+};
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -70,18 +74,15 @@ client.on('message', async (message) => {
       message.channel.startTyping();
       const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
         ? messageContent.split(' ')[1] : null;
-
       const offset = queryFlag ? splitIndex + queryFlag.length + 2 : splitIndex + 1;
 
-      const lookup = dict.definitions({
-        fields: 'definitions',
-        word: encodeURI(messageContent.substr(offset))
-      });
+      const lookup = dict.definitions(encodeURIComponent(messageContent.substr(offset)));
       lookup.then(
         (res) => {
+          console.log(JSON.stringify(res));
           const entry = responseToWordObject(res, queryFlag);
           if (entry) {
-            message.reply(`${entry.word} (${entry.category}): ${entry.definition}`);
+            message.reply(`${entry.word} (${entry.category.text}): ${entry.definition}`);
           } else {
             message.reply(
               `There was a problem finding a definition for ${messageContent.substr(offset)} (${queryFlag ? flagToLexicalCategory[queryFlag] : ''}).`
@@ -103,6 +104,7 @@ client.on('message', async (message) => {
         const lookup = dict.pronunciations(encodeURI(messageContent.substr(splitIndex + 1)));
         lookup.then(
           async (res) => {
+            console.log(JSON.stringify(res));
             const pronunciationURL = responseToPronunciationURL(res);
 
             if (!pronunciationURL) {
