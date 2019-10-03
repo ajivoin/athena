@@ -2,3 +2,4 @@ node_modules/
 auth.json
 temp.mp3
 .env
+package-lock.json
