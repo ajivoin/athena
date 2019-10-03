@@ -5,12 +5,17 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
 
 - Define a word with `!define <word>`
   - Sends a message containing the word, part of speech, and definition.
-  - Define a word with a specific part of speech using query flags: `!define <flag> <word>` will return the noun definition of the word.
+  - Define a word with a specific part of speech using query flags: `!define [flag] <word>`.
   - Flags:
     - `-n`: noun
     - `-v`: verb
     - `-adj`: adjective
     - `-adv`: adverb
+  - Alias: `!def [flag] <word>`
+- Get an example of a word with `!example <word>`
+  - Sends a message containing a random usage of the word.
+  - *Coming soon: Get an example of a word with a specific part of speech.*
+  - Alias: `!ex <word>`
 - Play pronunciation of a word with `!pronounce <word>`
   - Joins the voice channel the user who sent this message is in and plays the word's pronunciation.
   - Alias: `!say <word>`

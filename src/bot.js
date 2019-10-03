@@ -154,6 +154,7 @@ client.on('message', async (message) => {
       }
       break;
     }
+    case '!ex':
     case '!example': {
       message.channel.startTyping();
       const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
