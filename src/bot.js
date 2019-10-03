@@ -9,19 +9,20 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
 }
 
-const auth = {
+const config = {
   discordBotToken: process.env.discordBotToken.toString(),
   oxfordAppID: process.env.oxfordAppID.toString(),
-  oxfordAppKey: process.env.oxfordAppKey.toString()
+  oxfordAppKey: process.env.oxfordAppKey.toString(),
+  lang: 'lang' in process.env ? process.env.lang.toString() : 'en-us'
 };
 
 
 const client = new Discord.Client();
 
 const dict = new Dictionary({
-  app_id: auth.oxfordAppID,
-  app_key: auth.oxfordAppKey,
-  source_lang: 'en-us'
+  app_id: config.oxfordAppID,
+  app_key: config.oxfordAppKey,
+  source_lang: config.lang
 });
 
 const flagToLexicalCategory = {
@@ -188,4 +189,4 @@ client.on('message', async (message) => {
   }
 });
 
-client.login(auth.discordBotToken);
+client.login(config.discordBotToken);
