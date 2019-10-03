@@ -93,7 +93,6 @@ client.on('message', async (message) => {
       const lookup = dict.find(encodeURIComponent(messageContent.substr(offset)));
       lookup.then(
         (res) => {
-          console.log(JSON.stringify(res));
           const entry = responseToWordObject(res, queryFlag);
           if (entry) {
             message.reply(`${entry.word} (${entry.category}): ${entry.definition}`);
@@ -118,7 +117,6 @@ client.on('message', async (message) => {
         const lookup = dict.pronunciations(encodeURI(messageContent.substr(splitIndex + 1)));
         lookup.then(
           async (res) => {
-            console.log(JSON.stringify(res));
             const pronunciationURL = responseToPronunciationURL(res);
 
             if (!pronunciationURL) {
