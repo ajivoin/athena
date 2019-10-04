@@ -60,21 +60,19 @@ const responseToWordObject = (res, queryFlag) => {
 };
 
 const responseToPronunciationURL = (res) => {
-  let url = null;
-  res.results.forEach((result) => {
-    if (url) return;
-    result.lexicalEntries.forEach((lexEntry) => {
-      if (url) return;
-      lexEntry.pronunciations.forEach(({ audioFile }) => {
-        if (url) return;
-        if (audioFile) {
-          url = audioFile;
+  for (let i = 0; i < res.results.length; i++) {
+    const { lexicalEntries } = res.results[i];
+    for (let j = 0; j < lexicalEntries.length; j++) {
+      const { pronunciations } = lexicalEntries[i];
+      for (let k = 0; k < pronunciations.length; k++) {
+        if (pronunciations[k].audioFile) {
+          return pronunciations[k].audioFile;
         }
-      });
-    });
-  });
+      }
+    }
+  }
 
-  return url;
+  return null;
 };
 
 const findAndRemoveQueryFlag = (tokens) => {
