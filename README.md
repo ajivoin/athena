@@ -19,6 +19,7 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
 - Play pronunciation of a word with `!pronounce <word>`
   - Joins the voice channel the user who sent this message is in and plays the word's pronunciation.
   - Alias: `!say <word>`
+- Show this information with `!help`
 
 ## Hosting the Bot
 

@@ -1,9 +1,11 @@
 const _ = require('lodash');
+const Dictionary = require('oxford-dictionary');
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const http = require('http');
-const Dictionary = require('oxford-dictionary');
+
+const predefinedMessages = require('./predefinedMessages');
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
@@ -80,9 +82,9 @@ client.on('ready', () => {
 });
 
 client.on('message', async (message) => {
-  const messageContent = message.content;
+  const messageContent = message.content.trimRight();
   const splitIndex = messageContent.indexOf(' ');
-  const trigger = messageContent.substring(0, splitIndex);
+  const trigger = splitIndex > 0 ? messageContent.substring(0, splitIndex) : messageContent;
   switch (trigger) {
     case '!def':
     case '!define': {
@@ -182,6 +184,10 @@ client.on('message', async (message) => {
         }
       );
       message.channel.stopTyping();
+      break;
+    }
+    case '!help': {
+      message.author.send(predefinedMessages.help);
       break;
     }
     default:

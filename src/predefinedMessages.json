@@ -1,0 +1,3 @@
+{
+  "help": "Define a word with `!define <word>`\nGet a certain part of speech with `!define [flag] <word>`\nValid flags: `-n, -v, -adv, -adj`\nHear how a word is pronounced with `!pronounce <word>`\nSee examples of a word with `!example <word>`"
+}
