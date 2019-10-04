@@ -77,23 +77,27 @@ const responseToPronunciationURL = (res) => {
   return url;
 };
 
+const findAndRemoveQueryFlag = (tokens) => {
+  const queryFlagMatcher = /^-(n|v|adj|adv)$/;
+  const index = tokens.findIndex(token => queryFlagMatcher.test(token));
+  return index > -1 ? tokens.splice(index, 1) : null;
+};
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('message', async (message) => {
-  const messageContent = message.content.trimRight();
-  const splitIndex = messageContent.indexOf(' ');
-  const trigger = splitIndex > 0 ? messageContent.substring(0, splitIndex) : messageContent;
+  const messageTokens = message.content.split(' ');
+  const trigger = messageTokens.splice(0, 1)[0];
+  const queryFlag = findAndRemoveQueryFlag(messageTokens);
+  const word = messageTokens.join(' ');
+
   switch (trigger) {
     case '!def':
     case '!define': {
       message.channel.startTyping();
-      const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
-        ? messageContent.split(' ')[1] : null;
-      const offset = queryFlag ? splitIndex + queryFlag.length + 2 : splitIndex + 1;
-
-      const lookup = dict.find(encodeURIComponent(messageContent.substr(offset)));
+      const lookup = dict.find(encodeURIComponent(word));
       lookup.then(
         (res) => {
           const entry = responseToWordObject(res, queryFlag);
@@ -101,13 +105,13 @@ client.on('message', async (message) => {
             message.reply(`${entry.word} (${entry.category}): ${entry.definition}`);
           } else {
             message.reply(
-              `There was a problem finding a definition for ${messageContent.substr(offset)} (${queryFlag ? flagToLexicalCategory[queryFlag] : ''}).`
+              `There was a problem finding a definition for ${word} (${queryFlag ? flagToLexicalCategory[queryFlag] : ''}).`
             );
           }
         },
         (err) => {
           console.error(err);
-          message.reply(`There was a problem finding a definition for ${messageContent.substr(trigger.length + 1)}.`);
+          message.reply(`There was a problem finding a definition for ${word}.`);
         },
       );
       message.channel.stopTyping();
@@ -117,14 +121,14 @@ client.on('message', async (message) => {
     case '!pronounce': {
       if (!message.guild) return;
       if (message.member.voiceChannel) {
-        const lookup = dict.pronunciations(encodeURI(messageContent.substr(splitIndex + 1)));
+        const lookup = dict.pronunciations(encodeURI(word));
         lookup.then(
           async (res) => {
             const pronunciationURL = responseToPronunciationURL(res);
 
             if (!pronunciationURL) {
               return message.reply(
-                `There was a problem finding pronunciation for ${messageContent.substr(trigger.length + 1)}.`
+                `There was a problem finding pronunciation for ${word}.`
               );
             }
 
@@ -137,6 +141,7 @@ client.on('message', async (message) => {
                   connection.disconnect();
                 });
               });
+              download.close();
             });
 
             http.get(pronunciationURL, (resDownload) => {
@@ -146,7 +151,7 @@ client.on('message', async (message) => {
           (pronunciationError) => {
             console.error(pronunciationError);
             message.reply(
-              `There was a problem finding pronunciation for ${messageContent.substr(trigger.length + 1)}.`
+              `There was a problem finding pronunciation for ${word}.`
             );
           },
         );
@@ -158,11 +163,7 @@ client.on('message', async (message) => {
     case '!ex':
     case '!example': {
       message.channel.startTyping();
-      const queryFlag = messageContent.split(' ')[1] in flagToLexicalCategory
-        ? messageContent.split(' ')[1] : null;
-      const offset = queryFlag ? splitIndex + queryFlag.length + 2 : splitIndex + 1;
-
-      const lookup = dict.examples(encodeURIComponent(messageContent.substr(offset)));
+      const lookup = dict.examples(encodeURIComponent(word));
 
       lookup.then(
         (res) => {
@@ -174,12 +175,10 @@ client.on('message', async (message) => {
             if (randomExample) {
               message.reply(randomExample);
             } else {
-              // TODO: More robust reply
-              message.reply('No example found!');
+              message.reply(`no example found for ${word}.`);
             }
           } else {
-            // TODO: More robust reply
-            message.reply('No example found!');
+            message.reply(`no example found for ${word}.`);
           }
         }
       );
