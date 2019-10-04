@@ -106,12 +106,13 @@ const randomArrayElement = array => array[Math.floor(Math.random() * array.lengt
 /**
  * Returns all example usages of the word represented by lexicalEntries.
  * @param {Array} lexicalEntries
+ * @param {string} [queryFlag]
  * @return {Array<string>} Array of example usages of the word represented by lexicalEntries.
  */
-const getExamples = (lexicalEntries) => {
+const getExamples = (lexicalEntries, queryFlag) => {
   const examplesList = [];
   lexicalEntries.forEach((lexEntry) => {
-    if ('entries' in lexEntry) {
+    if ((!queryFlag || lexEntry.lexicalCategory.text.toLowerCase() === flagToLexicalCategory[queryFlag]) && 'entries' in lexEntry) {
       lexEntry.entries.forEach((entry) => {
         if ('senses' in entry) {
           entry.senses.forEach((sense) => {
@@ -217,7 +218,7 @@ client.on('message', async (message) => {
         (res) => {
           const lexicalEntries = _.get(res, 'results[0].lexicalEntries', false);
           if (lexicalEntries) {
-            const randomExample = randomArrayElement(getExamples(lexicalEntries));
+            const randomExample = randomArrayElement(getExamples(lexicalEntries, queryFlag));
             if (randomExample) {
               message.reply(randomExample);
             } else {
