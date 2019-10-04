@@ -15,9 +15,9 @@ const config = {
   discordBotToken: process.env.discordBotToken.toString(),
   oxfordAppID: process.env.oxfordAppID.toString(),
   oxfordAppKey: process.env.oxfordAppKey.toString(),
+  // Default language is "American English"
   lang: 'lang' in process.env ? process.env.lang.toString() : 'en-us'
 };
-
 
 const client = new Discord.Client();
 
@@ -34,31 +34,39 @@ const flagToLexicalCategory = {
   '-adv': 'adverb'
 };
 
+
+/**
+ * Gathers a word, definition, and lexical category from an Oxford Dictionary API response.
+ * @param {Object} res
+ * @param {string} [queryFlag]
+ * @return {Object}
+ *     If a definition is found, return object with keys 'word', 'definition', and 'category'.
+ *     Otherwise return null.
+ */
 const responseToWordObject = (res, queryFlag) => {
-  if (queryFlag) {
-    for (let i = 0; i < res.results.length; i++) {
-      for (let j = 0; j < res.results[i].lexicalEntries.length; j++) {
-        const lexicalEntry = res.results[i].lexicalEntries[j];
-        if (lexicalEntry.lexicalCategory.text.toLowerCase() === flagToLexicalCategory[queryFlag]) {
-          return {
-            category: lexicalEntry.lexicalCategory.text,
-            definition: lexicalEntry.entries[0].senses[0].definitions[0],
-            word: res.results[0].word
-          };
-        }
+  for (let i = 0; i < res.results.length; i++) {
+    for (let j = 0; j < res.results[i].lexicalEntries.length; j++) {
+      const lexicalEntry = res.results[i].lexicalEntries[j];
+      if (!queryFlag || lexicalEntry.lexicalCategory.text.toLowerCase() === flagToLexicalCategory[queryFlag]) {
+        return {
+          word: res.results[0].word,
+          definition: lexicalEntry.entries[0].senses[0].definitions[0],
+          category: lexicalEntry.lexicalCategory.text.toLowerCase()
+        };
       }
     }
-    return null;
   }
 
-  const lexicalEntry = _.get(res, 'results[0].lexicalEntries[0]', false);
-  return lexicalEntry ? {
-    category: lexicalEntry.lexicalCategory.text,
-    definition: lexicalEntry.entries[0].senses[0].definitions[0],
-    word: res.results[0].word
-  } : null;
+  return null;
 };
 
+/**
+ * Gathers a URL pointing to a pronunciation audiofile  from an Oxford Dictionary API response.
+ * @param {Object} res
+ * @return {string}
+ *     If a URL is found, return it.
+ *     Otherwise return null.
+ */
 const responseToPronunciationURL = (res) => {
   for (let i = 0; i < res.results.length; i++) {
     const { lexicalEntries } = res.results[i];
@@ -75,14 +83,31 @@ const responseToPronunciationURL = (res) => {
   return null;
 };
 
+/**
+ * If present, removes and returns the query flag from the input.
+ * @param {Array<string>} tokens
+ * @returns {string}
+ *     If a query flag is in tokens, return it.
+ *     Otherwise return null.
+ */
 const findAndRemoveQueryFlag = (tokens) => {
   const queryFlagMatcher = /^-(n|v|adj|adv)$/;
   const index = tokens.findIndex(token => queryFlagMatcher.test(token));
   return index > -1 ? tokens.splice(index, 1) : null;
 };
 
+/**
+ * Returns a random element from an array.
+ * @param {Array} array
+ * @return {Object} Random element from array.
+ */
 const randomArrayElement = array => array[Math.floor(Math.random() * array.length)];
 
+/**
+ * Returns all example usages of the word represented by lexicalEntries.
+ * @param {Array} lexicalEntries
+ * @return {Array<string>} Array of example usages of the word represented by lexicalEntries.
+ */
 const getExamples = (lexicalEntries) => {
   const examplesList = [];
   lexicalEntries.forEach((lexEntry) => {
