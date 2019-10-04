@@ -81,6 +81,31 @@ const findAndRemoveQueryFlag = (tokens) => {
   return index > -1 ? tokens.splice(index, 1) : null;
 };
 
+const randomArrayElement = array => array[Math.floor(Math.random() * array.length)];
+
+const getExamples = (lexicalEntries) => {
+  const examplesList = [];
+  lexicalEntries.forEach((lexEntry) => {
+    if ('entries' in lexEntry) {
+      lexEntry.entries.forEach((entry) => {
+        if ('senses' in entry) {
+          entry.senses.forEach((sense) => {
+            if ('examples' in sense) {
+              sense.examples.forEach((example) => {
+                if (example.text) {
+                  examplesList.push(example.text);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+
+  return examplesList;
+};
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -167,9 +192,7 @@ client.on('message', async (message) => {
         (res) => {
           const lexicalEntries = _.get(res, 'results[0].lexicalEntries', false);
           if (lexicalEntries) {
-            const randomLexicalEntryIndex = lexicalEntries[Math.floor(Math.random() * lexicalEntries.length)];
-            // TODO: Make all indices here random
-            const randomExample = _.get(randomLexicalEntryIndex, 'entries[0].senses[0].examples[0].text', false);
+            const randomExample = randomArrayElement(getExamples(lexicalEntries));
             if (randomExample) {
               message.reply(randomExample);
             } else {
