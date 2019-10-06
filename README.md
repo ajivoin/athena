@@ -1,25 +1,45 @@
 # Athena
+
 The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discord Bot.
 
 ## Usage
 
-- Define a word with `!define <word>`
-  - Sends a message containing the word, part of speech, and definition.
-  - Define a word with a specific part of speech using query flags: `!define [flag] <word>`.
+### Define
+
+Define a word with `!define <word>`.
+
+- Sends a message containing the word, part of speech, and definition.
+- Define a word with a specific part of speech using query flags: `!define [flag] <word>`.
+- Flags:
+  - `-n`: noun
+  - `-v`: verb
+  - `-adj`: adjective
+  - `-adv`: adverb
+- Alias: `!def`
+
+### Example
+
+Get an example of a word with `!example <word>`.
+
+- Sends a message containing a random usage of the word.
+- Define a word with a specific part of speech using query flags: `!example [flag] <word>`.
   - Flags:
-    - `-n`: noun
-    - `-v`: verb
-    - `-adj`: adjective
-    - `-adv`: adverb
-  - Alias: `!def [flag] <word>`
-- Get an example of a word with `!example <word>`
-  - Sends a message containing a random usage of the word.
-  - *Coming soon: Get an example of a word with a specific part of speech.*
-  - Alias: `!ex <word>`
-- Play pronunciation of a word with `!pronounce <word>`
-  - Joins the voice channel the user who sent this message is in and plays the word's pronunciation.
-  - Alias: `!say <word>`
-- Show this information with `!help`
+  - `-n`: noun
+  - `-v`: verb
+  - `-adj`: adjective
+  - `-adv`: adverb
+- Alias: `!ex`
+
+### Pronounce
+
+Play pronunciation of a word with `!pronounce <word>`.
+
+- Joins the voice channel the user who sent this message is in and plays the word's pronunciation.
+- Alias: `!say <word>`
+
+### Help
+
+Show the above information with `!help`.
 
 ## Hosting the Bot
 
@@ -39,7 +59,10 @@ The Greek Goddess of wisdom takes on a new job as a definition-retrieving Discor
   discordBotToken=DISCORD_BOT_TOKEN_HERE
   oxfordAppID=OXFORD_APP_ID_HERE
   oxfordAppKey=OXFORD_APP_KEY_HERE
+  lang=OXFORD_SOURCE_LANGUAGE_ID_HERE
   ```
+
+  If lang is not provided, the default is "American English."
 
 
 - Run `npm install` then `npm start`. Congratulations, your bot is online!
